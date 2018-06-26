@@ -17,7 +17,7 @@ def init():
 
     with open(p_proj_log[0], 'w+') as f:
         timestamp = datetime.now().isoformat()
-        _ = f.write('Initialized @ %s\n\n'%timestamp)
+        _ = f.write('%s\n\tInitialized\n'%timestamp)
         print('Initialized project log: %s'%p_proj_log[0])
 
     return
