@@ -35,7 +35,7 @@ def load(arg):
 
     return
 
-def run(func_name, **kwargs):
+def run(func_name, *args, **kwargs):
 
     if not p_proj_log:
         print('Missing project log.')
@@ -48,9 +48,18 @@ def run(func_name, **kwargs):
         output_list = [output]
 
     with open(p_proj_log[0], 'a') as f:
-        f.write('%s @ %s\n'%(func_name.__name__, datetime.now().isoformat()))
+        f.write('%s\n\t%s('%(datetime.now().isoformat(), func_name.__name__))
+        for x in args:
+            if type(x) == str:
+                _ = f.write("'%s',"%x)
+            else:
+                _ = f.write('%s,'%x)
         for x in kwargs:
-            _ = f.write('\t%s=%s\n'%(x,kwargs[x]))
+            if type(kwargs[x]) == str:
+                _ = f.write("%s='%s',"%(x,kwargs[x]))
+            else:
+                _ = f.write('%s=%s,'%(x,kwargs[x]))
+        f.write(')\n')
         for x in list(output_list):
             _ = f.write('\t@RETURN=%s\n'%x)
         f.write('\n')
