@@ -6,19 +6,20 @@ from datetime import datetime
 
 # Variables
 p_proj_log = []
+header = 'Brocess: '
 
 # Functions
 def init():
 
     p_proj_log.append(os.path.abspath('.brocess_log'))
     if os.path.isfile(p_proj_log[0]):
-        print('Brocess used here before... do  $ rm .brocess_log  before initializing again.')
+        print(header + 'Brocess used here before... do  $ rm .brocess_log  before initializing again.')
         return
 
     with open(p_proj_log[0], 'w+') as f:
         timestamp = datetime.now().isoformat()
         _ = f.write('%s\n\tInitialized\n\n'%timestamp)
-        print('Initialized project log: %s'%p_proj_log[0])
+        print(header + 'Initialized project log: %s'%p_proj_log[0])
 
     return
 
@@ -27,21 +28,24 @@ def load(arg):
     if os.path.isfile(arg):
         if p_proj_log:
             tmp = p_proj_log.pop()
-            print('Unloaded %s'%tmp)
+            print(header + 'Unloaded %s'%tmp)
         p_proj_log.append(os.path.abspath(arg))
-        print('Loaded project log: %s'%p_proj_log[0])
+        print(header + 'Loaded project log: %s'%p_proj_log[0])
     else:
-        print('Not a file: %s'%arg)
+        print(header + 'Not a file: %s'%arg)
 
     return
 
 def run(func_name, *args, **kwargs):
 
     if not p_proj_log:
-        print('Missing project log.')
-        return
+        if os.path.isfile('.brocess_log'):
+            load('.brocess_log')
+        else:
+            print(header + 'Missing project log.')
+            return
 
-    output = func_name(**kwargs)
+    output = func_name(*args, **kwargs)
     if isinstance(output, (list, tuple)):
         output_list = list(output)
     else:
@@ -64,4 +68,12 @@ def run(func_name, *args, **kwargs):
             _ = f.write('\t@RETURN=%s\n'%x)
         f.write('\n')
 
+    print(header + 'Logged.')
     return(output)
+
+def remove(p_file):
+
+    _ = run(os.remove, p_file)
+
+    print(header + 'Removed %s'%p_file)
+    return
