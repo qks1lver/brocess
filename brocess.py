@@ -75,5 +75,10 @@ def remove(p_file):
 
     _ = run(os.remove, p_file)
 
-    print(header + 'Removed %s'%p_file)
+    return
+
+def rename(p_source, p_dest):
+
+    _ = run(os.rename, p_source, p_dest)
+
     return
